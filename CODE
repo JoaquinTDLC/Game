@@ -1,0 +1,162 @@
+/*
+    Capstone Project 1
+    Purpose: Guess the Number Game
+    Name: Joaquin
+    Date: [Insert Date]
+*/
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+// FUNCTION PROTOTYPES
+void output_game_instructions(int min, int max, int x);
+int generate_rand_num(int min, int max);
+void read_and_validate(int& input, int min, int max);
+bool play_again();
+
+// ------------------------------------------------------------
+// FUNCTION DEFINITIONS AFTER MAIN
+// ------------------------------------------------------------
+
+int main()
+{
+    /*
+    Step 1: Define and initialize your constants.
+    Step 2: Define and initialize your variables.
+    Step 3: Output game logo/instructions by calling function output_game_instructions
+    Step 4: Generate a random number between 100 and 999 by calling function generate_rand_num
+    Step 5: Initialize the number of tries to 10
+    Step 6: Output the number of tries available
+    Step 7: Read and validate a guess from the user by calling function read_and_validate
+    Step 8: Decrement the number of tries available
+    Step 9: Compare the player’s guess with the random number and output appropriate message
+    Step 10: Repeat steps 6–9 until the player guesses correctly or runs out of tries
+    Step 11: Update the score and display it
+    Step 12: Ask the user if they want to play again by calling function play_again
+    Step 13: If true, repeat steps 3–12; otherwise terminate
+    */
+
+    srand(time(0));
+
+    // Step 1: Constants
+    const int MIN = 100;
+    const int MAX = 999;
+    const int MAX_TRIES = 10;
+    const int REWARD = 1;
+    const int PENALTY = 1;
+
+    // Step 2: Variables
+    int score = 0;
+    int guess;
+    int tries;
+    int secret;
+
+    do
+    {
+        // Step 3
+        output_game_instructions(MIN, MAX, MAX_TRIES);
+
+        // Step 4
+        secret = generate_rand_num(MIN, MAX);
+
+        // Step 5
+        tries = MAX_TRIES;
+
+        bool guessed = false;
+
+        do
+        {
+            // Step 6
+            cout << "You have " << tries << " tries\n";
+            cout << "Please enter your guess: ";
+
+            // Step 7
+            read_and_validate(guess, MIN, MAX);
+
+            // Step 8
+            tries--;
+
+            // Step 9
+            if (guess == secret)
+            {
+                cout << "Congratulations! You guessed correctly!\n";
+                guessed = true;
+            }
+            else if (tries == 0)
+            {
+                cout << "Sorry you ran out of tries. The number was " << secret << ".\n";
+            }
+            else if (guess < secret)
+            {
+                cout << "Please guess higher.\n";
+            }
+            else
+            {
+                cout << "Please guess lower.\n";
+            }
+
+        } while (!guessed && tries > 0);
+
+        // Step 11
+        if (guessed)
+            score += REWARD;
+        else
+            score -= PENALTY;
+
+        cout << "YOUR SCORE IS NOW " << score << endl;
+
+        // Step 12
+        cout << "Would you like to play again (type y for yes and n for no): ";
+
+    } while (play_again());
+
+    return 0;
+}
+
+// ------------------------------------------------------------
+// FUNCTION DEFINITIONS
+// ------------------------------------------------------------
+
+void output_game_instructions(int min, int max, int x)
+{
+    cout << "###############################################\n";
+    cout << "# Welcome to the GUESS THE NUMBER game !!!    #\n";
+    cout << "# You have " << x << " attempts to guess a number      #\n";
+    cout << "# between " << min << " and " << max << "! Your score will go up   #\n";
+    cout << "# by 1 every time you win, and down by 1 every #\n";
+    cout << "# time you lose. Ready! Set! Go !              #\n";
+    cout << "###############################################\n";
+}
+
+int generate_rand_num(int min, int max)
+{
+    return rand() % (max - min + 1) + min;
+}
+
+void read_and_validate(int& input, int min, int max)
+{
+    cin >> input;
+
+    while (input < min || input > max)
+    {
+        cout << "Invalid input. Input must be between " << min << " and " << max << ".\n";
+        cout << "Please re-enter: ";
+        cin >> input;
+    }
+}
+
+bool play_again()
+{
+    char answer;
+    cin >> answer;
+
+    while (answer != 'y' && answer != 'n')
+    {
+        cout << "Please type y for yes and n for no: ";
+        cin >> answer;
+    }
+
+    return answer == 'y';
+}
